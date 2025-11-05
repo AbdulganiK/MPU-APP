@@ -1,80 +1,42 @@
 import {
-  Backpack,
-  CakeSlice,
-  Coffee,
+  Navigation,
+  Route,
+  Gauge,
   Grape,
-  Hotel,
-  IceCream,
-  MapPin,
-  Package,
-  Pizza,
-  Plane,
-  Sandwich,
-  Smile,
+  ScanSearch,
+  Zap,
+  Workflow,
 } from "lucide-react";
 
-export const foods = [
+export const testTypes = [
   {
-    title: "Dessert",
-    icon: CakeSlice,
-    description: "Sweet treats to satisfy your cravings.",
+    title: "Straßenüberblickstest",
+    icon: Navigation,
+    description: "Überprüfung der Orientierungsfähigkeit",
   },
   {
-    title: "Pizza",
-    icon: Pizza,
-    description: "Delicious, cheesy slices of goodness.",
+    title: "Linienverfolgungstest",
+    icon: Route,
+    description: "Überprüfung der Spurhaltung",
   },
   {
-    title: "Sandwich",
-    icon: Sandwich,
-    description: "Classic and hearty fast food options.",
+    title: "Belastbarkeitstest",
+    icon: Gauge,
+    description: "Reaktion & Aufmerksamkeit im Verkehr",
   },
   {
-    title: "Coffee",
-    icon: Coffee,
-    description: "Your go-to boost of caffeine.",
+    title: "Figurenvergleichstest",
+    icon: ScanSearch,
+    description: "Konzentration & Genauigkeit im Straßenverkehr",
   },
   {
-    title: "Ice Cream",
-    icon: IceCream,
-    description: "Cold, creamy delights for any mood.",
+    title: "Reaktionstest",
+    icon: Zap,
+    description: "Reaktionsfähigkeit im Straßenverkehr",
   },
   {
-    title: "Fruit",
-    icon: Grape,
-    description: "Fresh and healthy natural snacks.",
-  },
-];
-
-export const travelMenuItems = [
-  {
-    title: "Destinations",
-    icon: MapPin,
-    description: "Discover amazing places to visit.",
-  },
-  {
-    title: "Hotels",
-    icon: Hotel,
-    description: "Find the best stays for your trips.",
-  },
-  {
-    title: "Flights",
-    icon: Plane,
-    description: "Get deals and tips on air travel.",
-  },
-  {
-    title: "Packing",
-    icon: Package,
-    description: "Essential checklists for stress-free packing.",
-  },
-  {
-    title: "Activities",
-    icon: Smile,
-    description: "Exciting things to do wherever you go.",
-  },
-  {
-    title: "Travel Tips",
-    icon: Backpack,
-    description: "Make every trip smooth and memorable.",
+    title: "Kombitest",
+    icon: Workflow,
+    description: "Gesamtüberprüfung aller fahrrelevanten Fähigkeiten",
   },
 ];

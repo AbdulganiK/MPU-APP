@@ -13,17 +13,41 @@ import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import React, { ComponentProps } from "react";
+import { testTypes } from "@/config/navbar";
 
 export const NavMenu = (props: ComponentProps<typeof NavigationMenu>) => (
   <NavigationMenu {...props}>
     <NavigationMenuList className="gap-1 space-x-0 text-sm">
       <NavigationMenuItem>
         <Button variant="ghost" asChild>
-          <Link href="#">Home</Link>
+          <Link href="#">Startseite</Link>
         </Button>
       </NavigationMenuItem>
+      <NavigationMenuItem>
+        <Button variant="ghost" asChild>
+          <Link href="#">Über uns</Link>
+        </Button>
+      </NavigationMenuItem>
+      <NavigationMenuItem>
+      <NavigationMenuTrigger>Tests</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul className="grid w-[400px] gap-3 p-1 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+          {testTypes.map((testType) => (
+            <ListItem
+              key={testType.title}
+              title={testType.title}
+              icon={testType.icon}
+              href="#"
+            >
+              {testType.description}
+            </ListItem>
+          ))}
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
     </NavigationMenuList>
   </NavigationMenu>
+
 );
 
 const ListItem = React.forwardRef<

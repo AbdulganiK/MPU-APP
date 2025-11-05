@@ -7,7 +7,7 @@ import { Coffee } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <div className="min-h-screen bg-muted">
+    <div className="bg-muted">
       <nav className="h-16 bg-background border-b">
         <div className="h-full flex items-center justify-between max-w-(--breakpoint-lg) mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-8">
@@ -18,7 +18,7 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button>
+            <Button variant={"default"}>
               Buy me a Coffe <Coffee />
             </Button>
 
