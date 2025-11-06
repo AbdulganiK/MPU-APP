@@ -6,8 +6,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Menu } from "lucide-react";
+import { Coffee, Menu } from "lucide-react";
 import Link from "next/link";
+
 import { Logo } from "@/components/logo";
 
 export const NavigationSheet = () => {
@@ -23,7 +24,11 @@ export const NavigationSheet = () => {
         </Button>
       </SheetTrigger>
       <SheetContent className="px-6 py-3">
-        <Logo />
+        <img
+              src="/LogoMitText.svg"
+              alt="MPU App Logo"
+              className="h-20 w-auto"
+            />
 
         <div className="mt-12 text-base space-y-4">
           <Link href="#" className="inline-block">
@@ -32,6 +37,9 @@ export const NavigationSheet = () => {
 
         
         </div>
+         <Button variant={"default"}>
+                Buy me a Coffe <Coffee />
+              </Button>
       </SheetContent>
     </Sheet>
   );

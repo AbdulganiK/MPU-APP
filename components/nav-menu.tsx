@@ -37,7 +37,7 @@ export const NavMenu = (props: ComponentProps<typeof NavigationMenu>) => (
               key={testType.title}
               title={testType.title}
               icon={testType.icon}
-              href="#"
+              href={testType.href}
             >
               {testType.description}
             </ListItem>

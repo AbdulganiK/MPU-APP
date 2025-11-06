@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
+    <div className="min-h-screen flex items-center justify-center px-6 pb-50 md:pb-24">
       <div className="text-center max-w-3xl">
         <Badge
           variant="secondary"
@@ -14,16 +14,14 @@ export default function Hero() {
         >
         </Badge>
         <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl md:leading-[1.2] font-semibold tracking-tighter">
-          Customized Shadcn UI Blocks & Components
+Fit für die Zulassungsprüfung
         </h1>
         <p className="mt-6 md:text-lg text-foreground/80">
-          Explore a collection of Shadcn UI blocks and components, ready to
-          preview and copy. Streamline your development workflow with
-          easy-to-implement examples.
+          Mit interaktiven Tests trainierst du Reaktion, Konzentration und Aufmerksamkeit - Schritt für Schritt zur erfolgreichen Führerschein Zulassungsprüfung.
         </p>
         <div className="mt-12 flex items-center justify-center gap-4">
           <Button size="lg" className="rounded-full text-base">
-            Get Started <ArrowUpRight className="size-5" />
+            Jetzt starten <ArrowUpRight className="size-5" />
           </Button>
           <Button
             variant="outline"
