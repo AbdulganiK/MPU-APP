@@ -5,6 +5,7 @@ import React from 'react'
 import Navbar from "@/components/navbar";
 import Canvas from '@/components/canvas';
 import { useWindowSize } from "@uidotdev/usehooks";
+import CanvasMenu from '@/components/canvasMenu';
 
 
 const ReactionPage = () => {
@@ -77,10 +78,12 @@ const startDrawing = (context: CanvasRenderingContext2D | null) => {
     context.stroke();
   };
 
+  
+
   return (
     <>
         <Navbar />
-        <Canvas draw={draw} startDrawing={startDrawing} endDrawing={endDrawing} height={(size?.height ?? 0)} width={size?.width ?? 0} />
+        <CanvasMenu draw={draw} startDrawing={startDrawing} endDrawing={endDrawing} height={(size?.height ?? 0)} width={size?.width ?? 0} />
     </>
   )
 }

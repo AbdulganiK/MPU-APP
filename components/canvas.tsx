@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react'
-type CanvasProps = {
-    startDrawing: (context: CanvasRenderingContext2D | null) => void;
-    draw: (context: CanvasRenderingContext2D | null) => void;
-    endDrawing: (context: CanvasRenderingContext2D | null) => void;
-    height: number;
-    width: number;
-};
+import CanvasProps from './canvasProps'
+
 
 const Canvas = ({startDrawing, draw, endDrawing, height, width }: CanvasProps) => {
     const ref = React.useRef<HTMLCanvasElement | null>(null)
