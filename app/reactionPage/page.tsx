@@ -6,69 +6,75 @@ import Navbar from "@/components/navbar";
 import Canvas from '@/components/canvas';
 import { useWindowSize } from "@uidotdev/usehooks";
 import CanvasMenu from '@/components/canvasMenu';
+import { drawCircle, getRandomInt } from '../utilities';
+
+
+
 
 
 const ReactionPage = () => {
+
   const size = useWindowSize();
+
+  const playGreenSound = () => {
+    const audio = new Audio("sounds/green.mp3");
+    audio.play();
+  };
 
 
   const draw = (context: CanvasRenderingContext2D | null) => {
     if (!context) return;
-    context.beginPath();
-    context.rect(20, 20, 150, 100);
-    context.stroke();
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    var random = getRandomInt(1, 6);
+
+    context.canvas.width = context.canvas.offsetWidth;
+    context.canvas.height = context.canvas.offsetHeight;
+    var current_symbol = "lose";
+    if (random == 1) {
+      drawCircle(context, "red", context.canvas.width / 2, context.canvas.height / 2);
+      var random_tone = getRandomInt(1, 2);
+      if (random_tone == 1) {
+        playGreenSound()
+      }
+
+
+    }
+    else if (random == 2) {
+      drawCircle(context, "green", context.canvas.width / 2, context.canvas.height / 2);
+      playGreenSound()
+      current_symbol = "win"
+    }
+    else if (random == 3) {
+      drawCircle(context, "green", context.canvas.width / 2 + 200, context.canvas.height / 2);
+      drawCircle(context, "red", context.canvas.width / 2 - 200, context.canvas.height / 2);
+      var random_tone = getRandomInt(1, 2);
+      if (random_tone == 1) {
+        playGreenSound()
+      }
+
+    }
+    else if (random == 4) {
+      drawCircle(context, "red", context.canvas.width / 2, context.canvas.height / 2);
+      var random_tone = getRandomInt(1, 2);
+      if (random_tone == 1) {
+        playGreenSound()
+      }
+    }
+    else if (random == 5) {
+      var random_tone = getRandomInt(1, 2);
+      if (random_tone == 1) {
+        playGreenSound()
+      }
+    } else if (random == 6) {
+        drawCircle(context, "green", context.canvas.width / 2, context.canvas.height / 2);
+    }
+
+    return current_symbol;
   };
 
-const startDrawing = (context: CanvasRenderingContext2D | null) => {
-  if (!context) return;
-
-  const canvas = context.canvas;
-  const { width, height } = canvas;
-
-  // Hintergrund zeichnen
-  context.fillStyle = "#FFEACB"; // helles Amber
-  context.fillRect(0, 0, width, height);
-
-  // Titel
-  context.fillStyle = "#222222";
-  context.font = "bold 36px Arial";
-  context.textAlign = "center";
-  context.fillText("Reaktionstest", width / 2, height * 0.25);
-
-  // Untertitel
-  context.font = "20px Arial";
-  context.fillStyle = "#444444";
-  context.fillText("Teste deine Reaktionsgeschwindigkeit", width / 2, height * 0.35);
-
-  // Beschreibung
-  context.font = "18px Arial";
-  context.fillStyle = "#555555";
-  context.textAlign = "center";
-  const explanation = [
-    "Es werden mehrere Formen angezeigt",
-    "Sobald du einen grünen Kreis und einen Ton hörst",
-    "musst du so schnell wie möglich die leer Taste drücken. Dabei ist zu beachten:",
-    "",
-  ];
-
-  // Mehrzeiligen Text mittig platzieren
-  const lineHeight = 26;
-  let y = height * 0.45;
-  explanation.forEach((line) => {
-    context.fillText(line, width / 2, y);
-    y += lineHeight;
-  });
-
-  // Rahmen / optischer Fokus
-  context.strokeStyle = "rgba(0,0,0,0.1)";
-  context.lineWidth = 4;
-  context.strokeRect(30, 30, width - 60, height - 60);
-
-  // Footer
-  context.font = "14px Arial";
-  context.fillStyle = "#888";
-  context.fillText("© 2025 Portino-MPU", width / 2, height - 50);
-};
+  const startDrawing = (context: CanvasRenderingContext2D | null) => {
+   
+  };
 
 
   const endDrawing = (context: CanvasRenderingContext2D | null) => {
@@ -78,12 +84,12 @@ const startDrawing = (context: CanvasRenderingContext2D | null) => {
     context.stroke();
   };
 
-  
+
 
   return (
     <>
-        <Navbar />
-        <CanvasMenu draw={draw} startDrawing={startDrawing} endDrawing={endDrawing} height={(size?.height ?? 0)} width={size?.width ?? 0} />
+      <Navbar />
+      <CanvasMenu draw={draw} height={(size?.height ?? 0)} width={size?.width ?? 0} />
     </>
   )
 }
