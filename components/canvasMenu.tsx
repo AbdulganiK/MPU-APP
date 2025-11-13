@@ -1,6 +1,5 @@
+// canvasMenu.tsx
 import React, { useState } from "react";
-import Canvas from "./canvas";
-import r_explanations from "@/config/reaction";
 import IconButtonDemo from "./button-05";
 import { ArrowLeft, ArrowRight, ListRestart, Settings } from "lucide-react";
 import {
@@ -12,20 +11,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import GameExplanation from "@/config/gameExplanation";
 
-// Props: alles, was Canvas braucht – außer totalRounds/intervalMs (kommen aus dem Menü)
-type CanvasMenuProps = {
-  startDrawing?: () => void;
-  draw: (ctx: CanvasRenderingContext2D) => string | void;
-  endDrawing?: () => void;
+type GameBaseProps = {
   height: number;
   width: number;
+  totalRounds: number;
+  intervalMs: number;
 };
 
+type CanvasMenuProps = {
+  GameComponent: React.ComponentType<GameBaseProps & any>; // „any“ = extra Props für das Spiel
+  height: number;
+  width: number;
+  r_explanations: GameExplanation[],
+  title: string,
+  heading: string,
+  gameProps?: Record<string, any>; // z.B. { draw, startDrawing, endDrawing }
+};
 
-
-const CanvasMenu: React.FC<CanvasMenuProps> = ({ startDrawing, draw, endDrawing, height, width }) => {
-  const [menuCount, setMenuCount] = useState(0);   // 0 = Intro, 1 = Settings, 2 = Game
+const CanvasMenu: React.FC<CanvasMenuProps> = ({
+  GameComponent,
+  height,
+  width,
+  r_explanations,
+  title,
+  heading,
+  gameProps = {},
+}) => {
+  const [menuCount, setMenuCount] = useState(0); // 0 = Intro, 1 = Settings, 2 = Game
   const [round, setRound] = useState<number>(16);
   const [seconds, setSeconds] = useState<number>(1);
   const [canvasKey, setCanvasKey] = useState(0);
@@ -35,21 +49,18 @@ const CanvasMenu: React.FC<CanvasMenuProps> = ({ startDrawing, draw, endDrawing,
   const gameMenuCount = 2;
 
   if (menuCount === explanationMenuCount) {
-    // ---------------- Intro / Erklärungs-Screen ----------------
     return (
       <div className="min-h-screen flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-5xl h-[80vh] bg-[#FFEACB] p-8 rounded-2xl flex flex-col">
-          {/* Header */}
           <div>
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tighter text-center">
-              Reaktionstest
+              {title}
             </h2>
             <p className="mt-3 text-xl text-center text-muted-foreground">
-              In diesem Test wird gemessen, wie schnell du auf eine unerwartete Situation reagierst.
+              {heading}
             </p>
           </div>
 
-          {/* Content (scrollt bei Bedarf) */}
           <div className="mt-8 flex-1 overflow-y-auto">
             <div className="grid md:grid-cols-1 gap-6 rounded-xl">
               {r_explanations.map(({ heading, text, icon: Icon }) => (
@@ -63,7 +74,6 @@ const CanvasMenu: React.FC<CanvasMenuProps> = ({ startDrawing, draw, endDrawing,
             </div>
           </div>
 
-          {/* Footer */}
           <div className="mt-6 flex justify-end">
             <IconButtonDemo
               onClick={() => setMenuCount(settingMenuCount)}
@@ -77,11 +87,9 @@ const CanvasMenu: React.FC<CanvasMenuProps> = ({ startDrawing, draw, endDrawing,
   }
 
   if (menuCount === settingMenuCount) {
-    // ---------------- Einstellungen ----------------
     return (
       <div className="min-h-screen flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-5xl h-[80vh] bg-[#FFEACB] p-8 rounded-2xl flex flex-col">
-          {/* Header */}
           <div>
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tighter text-center">
               Einstellungen
@@ -91,7 +99,6 @@ const CanvasMenu: React.FC<CanvasMenuProps> = ({ startDrawing, draw, endDrawing,
             </p>
           </div>
 
-          {/* Content */}
           <div className="mt-8 flex-1 overflow-y-auto">
             <div className="grid grid-cols-2 grid-rows-2 gap-6">
               <div className="p-4 rounded-xl">Anzahl der Testbilder</div>
@@ -135,7 +142,6 @@ const CanvasMenu: React.FC<CanvasMenuProps> = ({ startDrawing, draw, endDrawing,
             </div>
           </div>
 
-          {/* Footer */}
           <div className="mt-6 flex justify-between items-center">
             <IconButtonDemo
               onClick={() => setMenuCount(explanationMenuCount)}
@@ -154,22 +160,19 @@ const CanvasMenu: React.FC<CanvasMenuProps> = ({ startDrawing, draw, endDrawing,
     );
   }
 
-  // ---------------- Spiel / Canvas ----------------
+  // ---------------- Spiel / GameComponent ----------------
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-5xl h-[80vh] bg-[#FFEACB] p-8 rounded-2xl flex flex-col">
-        <Canvas
+        <GameComponent
           key={canvasKey}
-          draw={draw}
-          startDrawing={startDrawing}
-          endDrawing={endDrawing}
           height={height}
           width={width}
           totalRounds={round}
           intervalMs={seconds * 1000}
+          {...gameProps}
         />
 
-        {/* Footer */}
         <div className="mt-6 flex justify-end space-x-1.5 items-center">
           <IconButtonDemo
             onClick={() => setMenuCount(settingMenuCount)}

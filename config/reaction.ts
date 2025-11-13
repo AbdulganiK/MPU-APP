@@ -9,12 +9,16 @@ import {
     Undo2,
     UserRoundCheck,
 } from "lucide-react";
+import GameExplanation from "./gameExplanation";
 
-const r_explanations = [
+
+
+
+const r_explanations: GameExplanation[] = [
   {
     icon: ListChecks,
     heading: "Regeln",
-    text: "Auf dem Bildschirm erscheinen abwechselnd rote oder grüne Kreise. Manchmal ertönt zusätzlich ein Ton – dieser kann gemeinsam mit einem Kreis oder auch allein auftreten. Du darfst nur reagieren, wenn der grüne Kreis und der Ton gleichzeitig erscheinen.",
+    text: "Auf dem Bildschirm erscheinen abwechselnd rote oder grüne Kreise. Manchmal ertönt zusätzlich ein Ton - dieser kann gemeinsam mit einem Kreis oder auch allein auftreten. Du darfst nur reagieren, wenn der grüne Kreis und der Ton gleichzeitig erscheinen.",
   },
   {
     icon: Timer,
