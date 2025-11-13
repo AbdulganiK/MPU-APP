@@ -51,6 +51,7 @@ const Canvas = ({ startDrawing, draw, endDrawing, height, width, totalRounds, in
   }, [counter, draw, totalRounds, intervalMs]);
 
   useEffect(() => {
+
     const handleKeyUp = (event: KeyboardEvent) => {
       if (event.code !== "Space") return;
 
@@ -72,8 +73,10 @@ const Canvas = ({ startDrawing, draw, endDrawing, height, width, totalRounds, in
 
   // Hilfswerte für Statistik
   const gameFinished = counter >= totalRounds;
-  const accuracy =
-    correctTotal > 0 ? ((correctCounter / correctTotal) * 100).toFixed(1) : "0";
+ const accuracy =
+  correctTotal > 0
+    ? ((correctCounter / correctTotal) * 100).toFixed(1) // z.B. 33.3%
+    : "0";
 
   return (
     <div className="relative w-full h-[90%] max-h-[600px]">
@@ -92,7 +95,7 @@ const Canvas = ({ startDrawing, draw, endDrawing, height, width, totalRounds, in
 
       {/* Hinweis unten links */}
       <div className="absolute bottom-3 left-4 text-sm font-semibold text-gray-700 px-3 py-1">
-        Leertaste drücken – grün und Ton = Punkt
+        Leertaste drücken - grün und Ton = Punkt
       </div>
 
       {/* --- Statistik-Overlay --- */}
