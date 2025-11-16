@@ -32,7 +32,7 @@ export const testTypes = [
     title: "Figurenvergleichstest",
     icon: ScanSearch,
     description: "Konzentration & Genauigkeit im Straßenverkehr",
-    href : "#",
+    href : "/comparisionPage",
 
   },
   {
