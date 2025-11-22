@@ -1,41 +1,55 @@
-import React from 'react'
-import FigureCircle from '@/public/assets/circle/FigureCircle'
-import FigureCircleDotBottom from '@/public/assets/circle/FigureCircleDotBottom'
-import FigureCircleDotLeft from '@/public/assets/circle/FigureCircleDotLeft'
-import FigureCircleDotTop from '@/public/assets/circle/FigureCircleDotTop'
-import FigureCircleDotRight from '@/public/assets/circle/FigureCircleDotRight'
-import { getRandomNumber1to5 } from '@/lib/utils'
-import CircleMap from '@/public/assets/circle/CircleMap'
-
-
+import React, { useMemo } from "react";
+import { getRandomNumber1to5 } from "@/lib/utils";
+import CircleMap from "@/public/assets/circle/CircleMap";
 
 const Comparision = () => {
-    return (
-        <div className="relative w-full h-[90%] max-h-[600px]">
-            <div className="grid grid-flow-col grid-rows-1 grid-cols-4 gap-4 justify-center items-center mx-auto">
-                <div className="rounded-2xl border-2 border-[#d6b48b] p-4 shadow-sm bg-[#f7e6cc]">
-                    <FigureCircle width={200} height={200} stroke="black" />
-                </div>
-                <div className="rounded-2xl border-2 border-[#d6b48b] p-4 shadow-sm bg-[#f7e6cc]">
-                    <FigureCircle width={200} height={200} stroke="black" />
-                </div>
-                <div className="rounded-2xl border-2 border-[#d6b48b] p-4 shadow-sm bg-[#f7e6cc]">
-                    <FigureCircle width={200} height={200} stroke="black" />
-                </div>
-                <div className="rounded-2xl border-2 border-[#d6b48b] p-4 shadow-sm bg-[#f7e6cc]">
-                    <FigureCircle width={200} height={200} stroke="black" />
-                </div>
+  // Zufallszahlen nur einmal pro Mount berechnen
+  const { topNumbers, bottomNumber } = useMemo(() => {
+    const allNumbers = [1, 2, 3, 4, 5];
 
+    // Fisher-Yates Shuffle
+    for (let i = allNumbers.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [allNumbers[i], allNumbers[j]] = [allNumbers[j], allNumbers[i]];
+    }
+
+    const topNumbers = allNumbers.slice(0, 4); // 4 unterschiedliche oben
+    const bottomNumber = getRandomNumber1to5(); // zufällige unten
+
+    return { topNumbers, bottomNumber };
+  }, []);
+
+  const BottomFigure = CircleMap.get(bottomNumber);
+
+  return (
+    <div className="relative w-full h-[90%] max-h-[600px]">
+      {/* Obere 4 Figuren (alle unterschiedlich) */}
+      <div className="grid grid-cols-4 gap-4 justify-center items-center mx-auto">
+        {topNumbers.map((num) => {
+          const Figure = CircleMap.get(num);
+          if (!Figure) return null;
+
+          return (
+            <div
+              key={num}
+              className="rounded-2xl border-2 border-[#d6b48b] p-4 shadow-sm bg-[#f7e6cc]"
+            >
+              <Figure width={200} height={200} stroke="black" />
             </div>
+          );
+        })}
+      </div>
 
-            <div className="mt-4 grid grid-cols-4 gap-4 pt-20">
-                <div className="col-span-1 rounded-2xl border-2 border-[#d6b48b] p-4 shadow-sm bg-[#f7e6cc]">
-                    <FigureCircle width={200} height={200} stroke="black" />
-                </div>
-            </div>
-
+      {/* Untere Figur */}
+      <div className="mt-4 grid grid-cols-4 gap-4 pt-20">
+        <div className="col-span-1 rounded-2xl border-2 border-[#d6b48b] p-4 shadow-sm bg-[#f7e6cc]">
+          {BottomFigure && (
+            <BottomFigure width={200} height={200} stroke="black" />
+          )}
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default Comparision
+export default Comparision;
