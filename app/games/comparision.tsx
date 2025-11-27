@@ -1,10 +1,39 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { getRandomNumber1to5, getRandomNumber1toX } from "@/lib/utils";
 import CircleMap from "@/public/assets/circle/CircleMap";
 import FigureMaps from "@/public/assets/FigureMap";
 
-const Comparision = () => {
+type GameBaseProps = {
+  height: number;
+  width: number;
+  totalRounds: number;
+  intervalMs: number;
+};
+
+const Comparision = ({ height, width, totalRounds, intervalMs }: GameBaseProps) => {
   // Zufallszahlen nur einmal pro Mount berechnen
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+      
+  
+      let timer: number | undefined;
+  
+      if (counter < totalRounds) {
+        timer = window.setTimeout(() => {
+
+  
+          setCounter((prev) => prev + 1);
+  
+          
+        }, intervalMs);
+      }
+  
+      return () => {
+        if (timer) window.clearTimeout(timer);
+      };
+    }, [counter, totalRounds, intervalMs]);
+  
   const { topNumbers, bottomNumber } = useMemo(() => {
     const allNumbers = [1, 2, 3, 4, 5];
 
