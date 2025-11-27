@@ -8,3 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function getRandomNumber1to5(): number {
   return Math.floor(Math.random() * 5) + 1;
 }
+
+export function getRandomNumber1toX(x: number): number {
+  return Math.floor(Math.random() * x) + 1;
+}

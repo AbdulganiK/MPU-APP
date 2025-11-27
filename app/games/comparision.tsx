@@ -1,11 +1,13 @@
 import React, { useMemo } from "react";
-import { getRandomNumber1to5 } from "@/lib/utils";
+import { getRandomNumber1to5, getRandomNumber1toX } from "@/lib/utils";
 import CircleMap from "@/public/assets/circle/CircleMap";
+import FigureMaps from "@/public/assets/FigureMap";
 
 const Comparision = () => {
   // Zufallszahlen nur einmal pro Mount berechnen
   const { topNumbers, bottomNumber } = useMemo(() => {
     const allNumbers = [1, 2, 3, 4, 5];
+
 
     // Fisher-Yates Shuffle
     for (let i = allNumbers.length - 1; i > 0; i--) {
@@ -19,14 +21,15 @@ const Comparision = () => {
     return { topNumbers, bottomNumber };
   }, []);
 
-  const BottomFigure = CircleMap.get(bottomNumber);
+  const figureMap = FigureMaps.get(getRandomNumber1toX(FigureMaps.size)) ?? CircleMap;
+  const BottomFigure = figureMap.get(bottomNumber);
 
   return (
     <div className="relative w-full h-[90%] max-h-[600px]">
       {/* Obere 4 Figuren (alle unterschiedlich) */}
       <div className="grid grid-cols-4 gap-4 justify-center items-center mx-auto">
         {topNumbers.map((num) => {
-          const Figure = CircleMap.get(num);
+          const Figure = figureMap.get(num);
           if (!Figure) return null;
 
           return (
