@@ -32,7 +32,7 @@ const Comparision = ({ height, width, totalRounds, intervalMs }: GameBaseProps) 
       return () => {
         if (timer) window.clearTimeout(timer);
       };
-    }, [counter, totalRounds, intervalMs]);
+    }, [counter]);
   
   const { topNumbers, bottomNumber } = useMemo(() => {
     const allNumbers = [1, 2, 3, 4, 5];
