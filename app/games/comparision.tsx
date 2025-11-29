@@ -14,26 +14,33 @@ const Comparision = ({ height, width, totalRounds, intervalMs }: GameBaseProps) 
   // Zufallszahlen nur einmal pro Mount berechnen
   const [counter, setCounter] = useState(0);
 
-  useEffect(() => {
-      
-  
-      let timer: number | undefined;
-  
-      if (counter < totalRounds) {
-        timer = window.setTimeout(() => {
+  // Korrekt erratene Figuren
+  const [correctGuessedcounter, setcorrectGuessedCounter] = useState(0);
 
-  
-          setCounter((prev) => prev + 1);
-  
-          
-        }, intervalMs);
-      }
-  
-      return () => {
-        if (timer) window.clearTimeout(timer);
-      };
-    }, [counter]);
-  
+  // pro Runde nur ein Space erlauben
+  const pressedThisRoundRef = React.useRef(false);
+
+  // UseEffect for counting and changing rounds
+  useEffect(() => {
+
+
+    let timer: number | undefined;
+
+    if (counter < totalRounds) {
+      timer = window.setTimeout(() => {
+        // pro Runde nur ein Space erlauben
+        pressedThisRoundRef.current = false;
+        setCounter((prev) => prev + 1);
+      }, intervalMs);
+    }
+
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [counter]);
+
+
+
   const { topNumbers, bottomNumber } = useMemo(() => {
     const allNumbers = [1, 2, 3, 4, 5];
 
@@ -49,6 +56,36 @@ const Comparision = ({ height, width, totalRounds, intervalMs }: GameBaseProps) 
 
     return { topNumbers, bottomNumber };
   }, []);
+
+  // useEffect for checking keypress J and validating it
+  useEffect(() => {
+    const handleKeyYesUp = (event: KeyboardEvent) => {
+      if (event.code !== "KeyJ") return;
+      if (pressedThisRoundRef.current) return;
+      if (topNumbers.includes(bottomNumber)) {
+        setcorrectGuessedCounter((prev) => prev + 1);
+      }
+      pressedThisRoundRef.current = true;
+    };
+
+    window.addEventListener("keyup", handleKeyYesUp);
+    return () => window.removeEventListener("keyup", handleKeyYesUp);
+  }, [counter]);
+
+  // useEffect for checking keypress N and validating it
+  useEffect(() => {
+    const handleKeyNoUp = (event: KeyboardEvent) => {
+      if (event.code !== "KeyN") return;
+      if (pressedThisRoundRef.current) return;
+      if (!topNumbers.includes(bottomNumber)) {
+        setcorrectGuessedCounter((prev) => prev + 1);
+      }
+      pressedThisRoundRef.current = true;
+    };
+
+    window.addEventListener("keyup", handleKeyNoUp);
+    return () => window.removeEventListener("keyup", handleKeyNoUp);
+  }, [counter]);
 
   const figureMap = FigureMaps.get(getRandomNumber1toX(FigureMaps.size)) ?? CircleMap;
   const BottomFigure = figureMap.get(bottomNumber);
@@ -80,6 +117,12 @@ const Comparision = ({ height, width, totalRounds, intervalMs }: GameBaseProps) 
           )}
         </div>
       </div>
+
+      {/* Rundenzähler oben rechts */}
+      <div className="absolute top-3 right-4 text-xl font-bold text-gray-700 bg-white/80 px-3 py-1 rounded-lg shadow">
+        {counter}/{totalRounds}
+      </div>
+
     </div>
   );
 };

@@ -72,7 +72,7 @@ const Canvas = ({ startDrawing, draw, endDrawing, height, width, totalRounds, in
   }, [counter]);
 
   // Hilfswerte für Statistik
-  const gameFinished = counter >= totalRounds;
+const gameFinished = counter >= totalRounds;
  const accuracy =
   correctTotal > 0
     ? ((correctCounter / correctTotal) * 100).toFixed(1) // z.B. 33.3%
