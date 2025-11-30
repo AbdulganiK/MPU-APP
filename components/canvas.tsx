@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import CanvasProps from "./canvasProps";
+import Statistic from "./statistics";
+import { stat } from "fs";
+import RoundCounter from "./roundCounter";
+import GameHint from "./GameHint";
 
 const Canvas = ({ startDrawing, draw, endDrawing, height, width, totalRounds, intervalMs }: CanvasProps) => {
   const ref = React.useRef<HTMLCanvasElement | null>(null);
@@ -72,12 +76,15 @@ const Canvas = ({ startDrawing, draw, endDrawing, height, width, totalRounds, in
   }, [counter]);
 
   // Hilfswerte für Statistik
-const gameFinished = counter >= totalRounds;
- const accuracy =
-  correctTotal > 0
-    ? ((correctCounter / correctTotal) * 100).toFixed(1) // z.B. 33.3%
-    : "0";
 
+  const gameFinished = counter >= totalRounds;
+  const accuracy =
+    correctTotal > 0
+      ? ((correctCounter / correctTotal) * 100).toFixed(1) // z.B. 33.3%
+      : "0";
+  const stats = <Statistic correctCounter={correctCounter} correctTotal={correctTotal} accuracy={accuracy} stats_text="Gesammte Gewinnsymbole"/>;
+  
+  
   return (
     <div className="relative w-full h-[90%] max-h-[600px]">
       {/* Canvas */}
@@ -89,31 +96,13 @@ const gameFinished = counter >= totalRounds;
       />
 
       {/* Rundenzähler oben rechts */}
-      <div className="absolute top-3 right-4 text-xl font-bold text-gray-700 bg-white/80 px-3 py-1 rounded-lg shadow">
-        {counter}/{totalRounds}
-      </div>
+      <RoundCounter counter={counter} totalRounds={totalRounds}/>
 
       {/* Hinweis unten links */}
-      <div className="absolute bottom-3 left-4 text-sm font-semibold text-gray-700 px-3 py-1">
-        Leertaste drücken - grün und Ton = Punkt
-      </div>
+      <GameHint hint_text="Leertaste drücken - grün und Ton = Punkt"/>
 
       {/* --- Statistik-Overlay --- */}
-      {gameFinished && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm text-white rounded-3xl shadow-lg">
-          <h1 className="text-4xl font-bold mb-4">🎯 Spiel beendet!</h1>
-          <p className="text-2xl mb-2">
-            Richtige Treffer: <span className="font-bold">{correctCounter}</span>
-          </p>
-          <p className="text-2xl mb-6">
-            Gesamte Gewinnsymbole:{" "}
-            <span className="font-bold">{correctTotal}</span>
-          </p>
-          <p className="text-3xl font-semibold text-green-300">
-            Trefferquote: {accuracy}%
-          </p>
-        </div>
-      )}
+      {gameFinished && (stats)}
     </div>
   );
 };

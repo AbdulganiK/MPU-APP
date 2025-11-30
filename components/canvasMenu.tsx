@@ -89,7 +89,7 @@ const CanvasMenu: React.FC<CanvasMenuProps> = ({
   if (menuCount === settingMenuCount) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-5xl h-[80vh] bg-[#FFEACB] p-8 rounded-2xl flex flex-col">
+        <div className="w-full max-w-5xl h-[80vh] bg-[#FFEACB] p-8 rounded-2xl flex flex-col ">
           <div>
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tighter text-center">
               Einstellungen
@@ -142,7 +142,7 @@ const CanvasMenu: React.FC<CanvasMenuProps> = ({
             </div>
           </div>
 
-          <div className="mt-6 flex justify-between items-center">
+          <div className="mt-6 flex justify-between items-center relative z-50">
             <IconButtonDemo
               onClick={() => setMenuCount(explanationMenuCount)}
               label="Zurück"

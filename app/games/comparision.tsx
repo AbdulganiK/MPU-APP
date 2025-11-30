@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { getRandomNumber1to5, getRandomNumber1toX } from "@/lib/utils";
 import CircleMap from "@/public/assets/circle/CircleMap";
 import FigureMaps from "@/public/assets/FigureMap";
+import RoundCounter from "@/components/roundCounter";
+import Statistic from "@/components/statistics";
 
 type GameBaseProps = {
   height: number;
@@ -11,39 +13,18 @@ type GameBaseProps = {
 };
 
 const Comparision = ({ height, width, totalRounds, intervalMs }: GameBaseProps) => {
-  // Zufallszahlen nur einmal pro Mount berechnen
   const [counter, setCounter] = useState(0);
-
-  // Korrekt erratene Figuren
   const [correctGuessedcounter, setcorrectGuessedCounter] = useState(0);
+  const timerRef = useRef<number | undefined>(undefined);
 
-  // pro Runde nur ein Space erlauben
-  const pressedThisRoundRef = React.useRef(false);
+  // UseRef für Werte, die in Event-Listenern verwendet werden
+  const gameStateRef = useRef({
+    pressedThisRound: false,
+    currentShouldBeIncluded: false
+  });
 
-  // UseEffect for counting and changing rounds
-  useEffect(() => {
-
-
-    let timer: number | undefined;
-
-    if (counter < totalRounds) {
-      timer = window.setTimeout(() => {
-        // pro Runde nur ein Space erlauben
-        pressedThisRoundRef.current = false;
-        setCounter((prev) => prev + 1);
-      }, intervalMs);
-    }
-
-    return () => {
-      if (timer) window.clearTimeout(timer);
-    };
-  }, [counter]);
-
-
-
-  const { topNumbers, bottomNumber } = useMemo(() => {
+  const { topNumbers, bottomNumber, shouldBeIncluded } = useMemo(() => {
     const allNumbers = [1, 2, 3, 4, 5];
-
 
     // Fisher-Yates Shuffle
     for (let i = allNumbers.length - 1; i > 0; i--) {
@@ -51,44 +32,100 @@ const Comparision = ({ height, width, totalRounds, intervalMs }: GameBaseProps) 
       [allNumbers[i], allNumbers[j]] = [allNumbers[j], allNumbers[i]];
     }
 
-    const topNumbers = allNumbers.slice(0, 4); // 4 unterschiedliche oben
-    const bottomNumber = getRandomNumber1to5(); // zufällige unten
+    const topNumbers = allNumbers.slice(0, 4);
+    const remainingNumber = allNumbers[4];
+    const shouldBeIncluded = Math.random() > 0.5;
+    
+    const bottomNumber = shouldBeIncluded 
+      ? topNumbers[Math.floor(Math.random() * topNumbers.length)]
+      : remainingNumber;
 
-    return { topNumbers, bottomNumber };
-  }, []);
-
-  // useEffect for checking keypress J and validating it
-  useEffect(() => {
-    const handleKeyYesUp = (event: KeyboardEvent) => {
-      if (event.code !== "KeyJ") return;
-      if (pressedThisRoundRef.current) return;
-      if (topNumbers.includes(bottomNumber)) {
-        setcorrectGuessedCounter((prev) => prev + 1);
-      }
-      pressedThisRoundRef.current = true;
+    // Update ref mit aktuellen Werten
+    gameStateRef.current = {
+      pressedThisRound: false,
+      currentShouldBeIncluded: shouldBeIncluded
     };
 
-    window.addEventListener("keyup", handleKeyYesUp);
-    return () => window.removeEventListener("keyup", handleKeyYesUp);
+    return { topNumbers, bottomNumber, shouldBeIncluded };
   }, [counter]);
 
-  // useEffect for checking keypress N and validating it
+  // Timer-Effect
   useEffect(() => {
-    const handleKeyNoUp = (event: KeyboardEvent) => {
-      if (event.code !== "KeyN") return;
-      if (pressedThisRoundRef.current) return;
-      if (!topNumbers.includes(bottomNumber)) {
+    if (counter >= totalRounds) return;
+
+    timerRef.current = window.setTimeout(() => {
+      if (!gameStateRef.current.pressedThisRound) {
+        // Keine Eingabe in dieser Runde - automatisch zur nächsten Runde
+        setCounter(prev => prev + 1);
+      }
+    }, intervalMs);
+
+    return () => {
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current);
+      }
+    };
+  }, [counter, totalRounds, intervalMs]);
+
+  // SINGLE useEffect für Tastatureingaben
+  useEffect(() => {
+    const handleKeyUp = (event: KeyboardEvent) => {
+      const { pressedThisRound, currentShouldBeIncluded } = gameStateRef.current;
+      
+      // Frühzeitig return bei ungültigen Eingaben
+      if (pressedThisRound) return;
+      if (counter >= totalRounds) return;
+      
+      let isCorrect = false;
+      
+      if (event.code === "KeyJ") {
+        // J gedrückt - Benutzer sagt "ist enthalten"
+        isCorrect = currentShouldBeIncluded;
+      } else if (event.code === "KeyN") {
+        // N gedrückt - Benutzer sagt "ist nicht enthalten"
+        isCorrect = !currentShouldBeIncluded;
+      } else {
+        return; // Andere Taste - ignorieren
+      }
+      
+      // Korrekte Antwort zählen
+      if (isCorrect) {
         setcorrectGuessedCounter((prev) => prev + 1);
       }
-      pressedThisRoundRef.current = true;
+      
+      // Markiere diese Runde als bearbeitet
+      gameStateRef.current.pressedThisRound = true;
+      
+      // Timer für diese Runde stoppen
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current);
+      }
+      
+      // Sofort zur nächsten Runde wechseln
+      setCounter(prev => prev + 1);
     };
 
-    window.addEventListener("keyup", handleKeyNoUp);
-    return () => window.removeEventListener("keyup", handleKeyNoUp);
-  }, [counter]);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => window.removeEventListener("keyup", handleKeyUp);
+  }, [counter, totalRounds]); // counter als Dependency hinzugefügt
 
   const figureMap = FigureMaps.get(getRandomNumber1toX(FigureMaps.size)) ?? CircleMap;
   const BottomFigure = figureMap.get(bottomNumber);
+
+  const gameFinished = counter >= totalRounds;
+  
+  // Korrekte Berechnung der Statistik
+  const accuracy =
+    totalRounds > 0
+      ? ((correctGuessedcounter / totalRounds) * 100).toFixed(1)
+      : "0";
+    
+  const stats = <Statistic 
+    correctCounter={correctGuessedcounter} 
+    correctTotal={totalRounds} 
+    accuracy={accuracy} 
+    stats_text="Gesamte Symbolanzahl"
+  />;
 
   return (
     <div className="relative w-full h-[90%] max-h-[600px]">
@@ -110,19 +147,24 @@ const Comparision = ({ height, width, totalRounds, intervalMs }: GameBaseProps) 
       </div>
 
       {/* Untere Figur */}
-      <div className="mt-4 grid grid-cols-4 gap-4 pt-20">
+      <div className="mt-4 grid grid-cols-4 gap-4">
         <div className="col-span-1 rounded-2xl border-2 border-[#d6b48b] p-4 shadow-sm bg-[#f7e6cc]">
           {BottomFigure && (
             <BottomFigure width={200} height={200} stroke="black" />
           )}
         </div>
       </div>
+      
+      {/* --- Rundezähler --- */}
+      <RoundCounter counter={counter} totalRounds={totalRounds}/>
 
-      {/* Rundenzähler oben rechts */}
-      <div className="absolute top-3 right-4 text-xl font-bold text-gray-700 bg-white/80 px-3 py-1 rounded-lg shadow">
-        {counter}/{totalRounds}
-      </div>
-
+      {/* --- Statistik-Overlay --- */}
+      {gameFinished && stats}
+      
+      {/* Debug Info (optional entfernen) 
+      <div className="mt-2 text-sm text-gray-600 text-center">
+        Runde: {counter}/{totalRounds} | Korrekt: {correctGuessedcounter} | Enthalten: {shouldBeIncluded ? "Ja" : "Nein"}
+      </div>*/}
     </div>
   );
 };
