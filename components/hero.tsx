@@ -20,15 +20,21 @@ Fit für die Zulassungsprüfung
           Mit interaktiven Tests trainierst du Reaktion, Konzentration und Aufmerksamkeit - Schritt für Schritt zur erfolgreichen Führerschein Zulassungsprüfung.
         </p>
         <div className="mt-12 flex items-center justify-center gap-4">
-          <Button size="lg" className="rounded-full text-base">
-            Jetzt starten <ArrowUpRight className="size-5" />
+          <Button size="lg" className="rounded-full text-base" asChild>
+            <Link href="/comparisionPage">
+              Jetzt starten <ArrowUpRight className="size-5" />
+            </Link>
           </Button>
           <Button
             variant="outline"
             size="lg"
             className="rounded-full text-base shadow-none"
           >
-            <CirclePlay className="size-5" /> Watch Demo
+            <CirclePlay className="size-5" /> 
+            <Link href="/reactionPage">
+                        Reaktion testen
+
+            </Link>
           </Button>
         </div>
       </div>

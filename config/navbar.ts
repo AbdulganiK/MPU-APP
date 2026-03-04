@@ -10,42 +10,42 @@ import {
 
 export const testTypes = [
   {
-    title: "Straßenüberblickstest",
-    icon: Navigation,
-    description: "Überprüfung der Orientierungsfähigkeit",
-    href : "#",
-  },
-  {
-    title: "Linienverfolgungstest",
-    icon: Route,
-    description: "Überprüfung der Spurhaltung",
-    href : "#",
-  },
-  {
-    title: "Belastbarkeitstest",
-    icon: Gauge,
-    description: "Reaktion & Aufmerksamkeit im Verkehr",
-    href : "#",
-
-  },
-  {
     title: "Figurenvergleichstest",
     icon: ScanSearch,
     description: "Konzentration & Genauigkeit im Straßenverkehr",
-    href : "/comparisionPage",
+    href: "/comparisionPage",
 
   },
   {
     title: "Reaktionstest",
     icon: Zap,
     description: "Reaktionsfähigkeit im Straßenverkehr",
-    href : "/reactionPage",
+    href: "/reactionPage",
+
+  },
+  {
+    title: "Straßenüberblickstest",
+    icon: Navigation,
+    description: "Überprüfung der Orientierungsfähigkeit",
+    href: "/coming-soon",
+  },
+  {
+    title: "Linienverfolgungstest",
+    icon: Route,
+    description: "Überprüfung der Spurhaltung",
+    href: "/coming-soon",
+  },
+  {
+    title: "Belastbarkeitstest",
+    icon: Gauge,
+    description: "Reaktion & Aufmerksamkeit im Verkehr",
+    href: "/coming-soon",
 
   },
   {
     title: "Kombitest",
     icon: Workflow,
     description: "Gesamtüberprüfung aller fahrrelevanten Fähigkeiten",
-    href : "#",
+    href: "/coming-soon",
   },
 ];
